@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primera Petición GET</title>
+</head>
+
+<body style="background-color: rgb(76, 61, 214);">
+
+    <h1 style="color: aliceblue;">Primera petición GET</h1>
+    <div style="background-color: rgb(236, 235, 237); padding: 30px; border-radius: 12px">
+    <p>Se está ejecutando un cliente Node.js para validar la arquitectura cliente-servidor mediante una petición HTTP GET dirigida a la ruta /api/talleres del backend alojado en Render.</p>
+
+    <p style="font-size: medium;">1. Transacción de red: El script utiliza la API nativa fetch para establecer comunicación sobre HTTPS/TCP con el servidor remoto y procesar el flujo de datos.</p>
+
+    <p>2. Carga útil: El servidor responde con un arreglo JSON estructurado que contiene tres registros de talleres ("Introducción a Python", "Fundamentos de Redes" y "Diseño de Bases de Datos"), exponiendo atributos relacionales como id, instructor, fecha, cupo y created_at.</p>
+
+    <p>3. Observación de la consola: La consola muestra las cadenas de texto de manera literal (ej. ${API_URL}) en lugar de interpolar las variables, debido a que las funciones console.log del código utilizan comillas dobles (" ") en lugar de comillas invertidas (backticks).</p>
+
+    <p>Imagen de la consola:</p>
+    <img src="img/ConsolaClientes.png">
+    </div>
+</body>
+</html>
