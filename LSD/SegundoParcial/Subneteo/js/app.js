@@ -139,7 +139,48 @@
     }
   });
 
-  // ---------- VLSM ----------Tarea
+  // ---------- VLSM ---------- tarea
+
+  function agregarFila(nombre = '', hosts = '') {
+    const fila = document.createElement('div');
+    fila.className = 'req-fila';
+    fila.innerHTML = `
+      <input type="text" class="vlsm-nombre" placeholder="Nombre del área" autocomplete="off">
+      <input type="number" class="vlsm-hosts" min="1" placeholder="Hosts">
+      <button type="button" class="quitar" title="Quitar">&times;</button>`;
+    fila.querySelector('.vlsm-nombre').value = nombre;
+    fila.querySelector('.vlsm-hosts').value = hosts;
+    fila.querySelector('.quitar').addEventListener('click', () => fila.remove());
+    $('vlsm-filas').appendChild(fila);
+  }
+
+  $('vlsm-agregar').addEventListener('click', () => agregarFila());
+
+  $('form-vlsm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const destino = $('vlsm-resultado');
+    try {
+      const ip = $('vlsm-red').value.trim();
+      const prefijo = S.leerPrefijo($('vlsm-prefijo').value);
+      const requerimientos = [...document.querySelectorAll('#vlsm-filas .req-fila')].map((f, i) => ({
+        nombre: f.querySelector('.vlsm-nombre').value.trim() || `Subred ${i + 1}`,
+        hosts: Number(f.querySelector('.vlsm-hosts').value),
+      }));
+      const r = S.subnetearVLSM(ip, prefijo, requerimientos);
+      const pct = ((r.direccionesUsadas / r.direccionesTotales) * 100).toFixed(1);
+      destino.innerHTML = tarjetaRedBase(ip, prefijo) + `
+        <div class="tarjeta">
+          <h3>Resultado</h3>
+          <dl class="datos">
+            <div><dt>Direcciones usadas</dt><dd>${formatoMiles(r.direccionesUsadas)} de ${formatoMiles(r.direccionesTotales)} (${pct}%)</dd></div>
+            <div><dt>Primera dirección libre</dt><dd>${r.primerLibre ? r.primerLibre : 'Ninguna'}</dd></div>
+          </dl>
+        </div>
+        <div class="tarjeta">${tablaSubredes(r.subredes, true)}</div>`;
+    } catch (err) {
+      mostrarError(destino, err);
+    }
+  });
 
   // ---------- ¿A qué red pertenece? ----------
 
