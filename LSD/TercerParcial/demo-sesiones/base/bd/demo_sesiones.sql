@@ -13,11 +13,11 @@ USE demo_sesiones;
 
 -- Usuarios: la contraseña NUNCA se guarda tal cual, solo su hash (bcrypt).
 CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario VARCHAR(30) NOT NULL UNIQUE,
-    nombre VARCHAR(80) NOT NULL,
-    rol VARCHAR(10) NOT NULL, -- 'alumno' o 'admin'
-    contrasena_hash CHAR(60) NOT NULL
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario VARCHAR(30) NOT NULL UNIQUE,
+  nombre VARCHAR(80) NOT NULL,
+  rol VARCHAR(10) NOT NULL, -- 'alumno' o 'admin'
+  contrasena_hash CHAR(60) NOT NULL
 );
 
 -- Sesiones: aquí guarda express-mysql-session lo que el servidor recuerda de cada sesión.
@@ -25,14 +25,25 @@ CREATE TABLE usuarios (
 -- expires    = cuándo vence (segundos desde 1970)
 -- data       = los datos de la sesión en JSON (usuario, rol, visitas...)
 CREATE TABLE sessions (
-    session_id VARCHAR(128) COLLATE utf8mb4_bin NOT NULL,
-    expires INT UNSIGNED NOT NULL,
-    data MEDIUMTEXT COLLATE utf8mb4_bin,
-    PRIMARY KEY (session_id)
+  session_id VARCHAR(128) COLLATE utf8mb4_bin NOT NULL,
+  expires INT UNSIGNED NOT NULL,
+  data MEDIUMTEXT COLLATE utf8mb4_bin,
+  PRIMARY KEY (session_id)
+);
+
+-- Lista negra de JWT (semana 13): aquí se anota el jti de cada token al que se le hizo logout.
+-- jti         = id único del token (viene dentro del JWT)
+-- expira      = cuándo vence el token (ya no hace falta recordarlo después de esa fecha)
+-- revocado_en = cuándo se anotó en la lista negra
+CREATE TABLE tokens_revocados (
+  jti VARCHAR(64) NOT NULL PRIMARY KEY,
+  usuario VARCHAR(30) NOT NULL,
+  expira DATETIME NOT NULL,
+  revocado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Contraseñas: ana12345, luis12345 y admin12345
 INSERT INTO usuarios (usuario, nombre, rol, contrasena_hash) VALUES
-    ('ana', 'Ana López', 'alumno', '$2a$10$zngOdAyKeY6JTTKdax4nwu9nq7YOkXlSCCfouJLolZF6JR0QIabSy'),
-    ('luis', 'Luis Pérez', 'alumno', '$2a$10$ReAlY7F0jEMlErF7VHM2fe0LATf1FNFzyQ88R8GahAMC8vk1OF67i'),
-   ('admin', 'Administración CECyT 9', 'admin', '$2a$10$PGRPlqtOY2XBKvdebx1H8eHgifILHaD8joCQIm5t9lbjoIHArBbvK');
+  ('ana', 'Ana López', 'alumno', '$2a$10$zngOdAyKeY6JTTKdax4nwu9nq7YOkXlSCCfouJLolZF6JR0QIabSy'),
+  ('luis', 'Luis Pérez', 'alumno', '$2a$10$ReAlY7F0jEMlErF7VHM2fe0LATf1FNFzyQ88R8GahAMC8vk1OF67i'),
+  ('admin', 'Administración CECyT 9', 'admin', '$2a$10$PGRPlqtOY2XBKvdebx1H8eHgifILHaD8joCQIm5t9lbjoIHArBbvK');

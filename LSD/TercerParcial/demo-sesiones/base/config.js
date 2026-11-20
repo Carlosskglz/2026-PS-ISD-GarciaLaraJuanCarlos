@@ -4,27 +4,29 @@ module.exports = {
   // Dónde guarda el servidor las sesiones:
   //  'mysql'   → en la tabla sessions de tu base de datos (sobreviven a un reinicio).
   //  'memoria' → en la memoria del servidor (se pierden al reiniciar).
-    almacen: 'mysql',
+  almacen: 'mysql',
 
   // Cuánto dura la sesión, en milisegundos. 10 minutos = 10 * 60 * 1000
   maxAgeMs: 10 * 60 * 1000,
 
   // true: cada petición reinicia el reloj de la expiración (la sesión vence por inactividad).
   // false: vence a la hora fija, aunque el usuario siga usando la página.
-    rolling: false,
+  rolling: false,
 
   // true: el JavaScript de la página NO puede leer la cookie (document.cookie no la muestra).
-    httpOnly: true,
+  httpOnly: true,
 
   // 'lax': la cookie no viaja en peticiones POST que vienen de otros sitios. 'strict' es más estricto.
-    sameSite: 'lax',
+  sameSite: 'lax',
 
   // true: al iniciar sesión el servidor cambia el id de la sesión (protege contra la fijación de sesión).
-    regenerarAlEntrar: true,
+  regenerarAlEntrar: true,
 
-  //cuantos segundos va a durara el token
-    jwtExpiraSeg : 5*60,
+  // ---------- JWT (semana 13) ----------
+  // Cuántos segundos dura un token. 5 minutos = 5 * 60
+  jwtExpiraSeg: 5 * 60,
 
-  //true: al cerrar sesion el servidor anota el token en la lista negra y ya no lo acepta. false: el servidor no guarda nada, el token sigue sirviendo
-    jwtRevocar: true,
+  // true: al cerrar sesión el servidor anota el token en la lista negra (tabla tokens_revocados) y ya no lo acepta.
+  // false: el servidor no guarda nada y el token sigue sirviendo hasta que venza.
+  jwtRevocar: true,
 };
